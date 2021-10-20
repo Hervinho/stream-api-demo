@@ -10,7 +10,6 @@ Winston logging levels (highest to lowest)
  */
 const appRoot = require('app-root-path');//used for paths
 const winston = require('winston');
-//const moment = require('moment');
 require('winston-daily-rotate-file');//file rotation
 
 let timestampFomat = function () {
@@ -69,5 +68,4 @@ logger.stream = {
     }
 };
 
-//module.exports = logger;
 export const winstonLogger = logger;

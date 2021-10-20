@@ -18,6 +18,10 @@ class WatchLog {
                 type: Schema.Types.ObjectId,
                 ref: 'User',
             },
+            video: {
+                type: Schema.Types.ObjectId,
+                ref: 'Video',
+            },
             timestamp : {
                 type: Date,
                 default: Date.now
