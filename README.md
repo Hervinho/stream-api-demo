@@ -1,0 +1,1 @@
+This is base structure for all my Node.js with MongoDB backend projects.
