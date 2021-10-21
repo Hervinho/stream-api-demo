@@ -13,7 +13,7 @@ class WatchLogRoute {
     public router:any;
     public WatchLogModel:any;
     public DATE_FORMAT = 'DD-MM-YYYY HH:mm:ss';
-    public STREAM_LIMIT = 3;
+    public USER_STREAM_LIMIT = 3;
 
     public routes() {
         //get all watch logs.
@@ -49,6 +49,7 @@ class WatchLogRoute {
         });
 
         //get the latest user watchLog and decide whether user can stream new video or not.
+        // is this user (account) watching anything now (in the last 10 seconds) ?
         this.router.get("/latest/users/:id", (req:any, res:any) => {
             let self = this;
             console.log(moment(), moment().subtract(10, 'seconds'));
@@ -61,9 +62,11 @@ class WatchLogRoute {
                         $gte: moment().subtract(10, 'seconds')
                     }
                 })
+                .populate('video')
+                .populate('profile')
                 .then(function(watchLogs:[]){
-                    watchLogs?.length < self.STREAM_LIMIT && res.json({success: true, message: "User can stream", data: watchLogs});
-                    watchLogs?.length >= self.STREAM_LIMIT && res.json({success: false, message: "User already has 3 concurrent streams", data: watchLogs});
+                    watchLogs?.length < self.USER_STREAM_LIMIT && res.json({success: true, message: "User can stream", data: watchLogs});
+                    watchLogs?.length >= self.USER_STREAM_LIMIT && res.json({success: false, message: "User already has 3 concurrent streams", data: watchLogs});
                 }).catch(function (exc:any) {
                     res.json({success: false, data: null, error: exc});
                 });
@@ -86,23 +89,25 @@ class WatchLogRoute {
         });
 
         //create a watchLog.
+        //this would get called when user starts watching, and at specific intervals during the video, e.g every 10s
         this.router.post("/", (req:any, res:any) => {
-            if (!req.body.profile || !req.body.user) {
-                res.json({success: false, msg: "Please pass profile and user Ids."});
+            if (!req.body.profile || !req.body.user || !req.body.video) {
+                res.json({success: false, msg: "Please pass video, profile and user Ids."});
             } else {
-                let newWatchLog = new this.WatchLogModel({
-                    ...req.body,
-                    timestamp: moment()
-                });
+                let self = this;
+                const { profile, user, video } = req.body;
 
-                newWatchLog.save(function(err: any, watchLog: any) {
-                    if (err) {
-                        return res.json({success: false, msg: "Error creating watchLog", error: err});
-                    } else {
-                        return res.json({success: true, msg: "Successful created new watchLog.", _id: watchLog._id});
-                    }
-                    
-                });
+                self.WatchLogModel
+                    .findOneAndUpdate(
+                        { profile, user, video }, 
+                        { timestamp: moment() }, 
+                        { new: true, upsert: true }
+                    )
+                    .then(function(watchLog:any){
+                        res.json({success: true, msg: "Successful created new watchLog.", data: watchLog});
+                    }).catch(function (exc:any) {
+                        res.json({success: false, data: null, error: exc});
+                    });
             }
         });
     }

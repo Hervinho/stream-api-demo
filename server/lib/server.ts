@@ -1,8 +1,6 @@
 //Node modules
 import express from 'express';
 import * as bodyParser from "body-parser";
-import passport from "passport";
-import * as path from 'path';
 import mongoose from "mongoose";
 
 //API URLs
@@ -32,7 +30,6 @@ class Server {
             res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS'); 
             next();
         });
-        this.app.use(passport.initialize());
     };
 
     private routes(): void {
