@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as User from "../models/user.model";
+import { winstonLogger } from "../config/winston.config";
 
 class UserRoute {
 
@@ -21,6 +22,7 @@ class UserRoute {
                 .then(function(users:any){
                     res.json({success: true, data: users});
                 }).catch(function (exc:any) {
+                    winstonLogger.error(exc);
                     res.json({success: false, data: null, error: exc});
                 });
 
@@ -34,6 +36,7 @@ class UserRoute {
                 .then(function(user:any){
                     res.json({success: true, data: user});
                 }).catch(function (exc:any) {
+                    winstonLogger.error(exc);
                     res.json({success: false, data: null, error: exc});
                 });
         });
@@ -45,17 +48,13 @@ class UserRoute {
             } else if (req.body.email.includes(' ') || req.body.password.includes(' ')) {
                 res.json({success: false, msg: "email or password cannot have empty spaces"});
             } else {
-                // let newUser = new this.UserModel({
-                //     password: req.body.password,
-                //     email: req.body.email,
-	            //     fullname: req.body.fullname
-                // });
                 let newUser = new this.UserModel({
                     ...req.body
                 });
 
                 newUser.save(function(err: any, user: any) {
                     if (err) {
+                        winstonLogger.error(err);
                         return res.json({success: false, msg: "Error creating user", error: err});
                     } else {
                         return res.json({success: true, msg: "Successful created new user.", _id: user._id});

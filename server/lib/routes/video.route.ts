@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as Video from "../models/video.model";
+import { winstonLogger } from "../config/winston.config";
 
 class VideoRoute {
 
@@ -21,6 +22,7 @@ class VideoRoute {
                 .then(function(videos:any){
                     res.json({success: true, data: videos});
                 }).catch(function (exc:any) {
+                    winstonLogger.error(exc);
                     res.json({success: false, data: null, error: exc});
                 });
 
@@ -34,6 +36,7 @@ class VideoRoute {
                 .then(function(video:any){
                     res.json({success: true, data: video});
                 }).catch(function (exc:any) {
+                    winstonLogger.error(exc);
                     res.json({success: false, data: null, error: exc});
                 });
         });
@@ -43,17 +46,13 @@ class VideoRoute {
             if (!req.body.title ) {
                 res.json({success: false, msg: "Please pass title."});
             } else {
-                // let newVideo = new this.VideoModel({
-                //     password: req.body.password,
-                //     email: req.body.email,
-	            //     fullname: req.body.fullname
-                // });
                 let newVideo = new this.VideoModel({
                     ...req.body
                 });
 
                 newVideo.save(function(err: any, video: any) {
                     if (err) {
+                        winstonLogger.error(err);
                         return res.json({success: false, msg: "Error creating video", error: err});
                     } else {
                         return res.json({success: true, msg: "Successful created new video.", _id: video._id});

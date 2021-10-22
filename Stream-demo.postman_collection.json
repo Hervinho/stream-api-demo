@@ -1,0 +1,227 @@
+{
+	"info": {
+		"_postman_id": "2d89dcdb-4475-46a8-bf53-f19b4c6310a2",
+		"name": "Stream-demo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "http://localhost:4500/api/users",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"millie@test.com\",\n    \"password\": \"1234\",\n    \"fullname\": \"Millie\",\n    \"country\": \"ZA\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4500/api/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4500",
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": "Create user record"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "http://localhost:4500/api/profiles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4500/api/profiles",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4500",
+							"path": [
+								"api",
+								"profiles"
+							]
+						},
+						"description": "create profile"
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:4500/api/profiles",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Martin\",\n    \"user\": \"6170600d1f57dd2c60f34b12\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4500/api/profiles",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4500",
+							"path": [
+								"api",
+								"profiles"
+							]
+						},
+						"description": "create profile"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Video",
+			"item": [
+				{
+					"name": "http://localhost:4500/api/videos",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"The Dark Knight Rises\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4500/api/videos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4500",
+							"path": [
+								"api",
+								"videos"
+							]
+						},
+						"description": "Create video record"
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:4500/api/videos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4500/api/videos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4500",
+							"path": [
+								"api",
+								"videos"
+							]
+						},
+						"description": "Get all video records"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Watch Logs",
+			"item": [
+				{
+					"name": "http://localhost:4500/api/watchlogs",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"profile\": \"617060801f57dd2c60f34b16\",\n    \"user\": \"6170600d1f57dd2c60f34b12\",\n    \"video\": \"61705f441f57dd2c60f34b0c\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4500/api/watchlogs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4500",
+							"path": [
+								"api",
+								"watchlogs"
+							]
+						},
+						"description": "create watch log"
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:4500/api/watchlogs/latest/users/6170600d1f57dd2c60f34b12",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"profile\": \"617060801f57dd2c60f34b16\",\n    \"user\": \"6170600d1f57dd2c60f34b12\",\n    \"video\": \"61705f441f57dd2c60f34b0c\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4500/api/watchlogs/latest/users/6170600d1f57dd2c60f34b12",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4500",
+							"path": [
+								"api",
+								"watchlogs",
+								"latest",
+								"users",
+								"6170600d1f57dd2c60f34b12"
+							]
+						},
+						"description": "get latest user watch logs"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as Profile from "../models/profile.model";
+import { winstonLogger } from "../config/winston.config";
 
 class ProfileRoute {
 
@@ -22,6 +23,7 @@ class ProfileRoute {
                 .then(function(profiles:any){
                     res.json({success: true, data: profiles});
                 }).catch(function (exc:any) {
+                    winstonLogger.error(exc);
                     res.json({success: false, data: null, error: exc});
                 });
 
@@ -36,6 +38,7 @@ class ProfileRoute {
                 .then(function(profile:any){
                     res.json({success: true, data: profile});
                 }).catch(function (exc:any) {
+                    winstonLogger.error(exc);
                     res.json({success: false, data: null, error: exc});
                 });
 
@@ -50,6 +53,7 @@ class ProfileRoute {
                 .then(function(profile:any){
                     res.json({success: true, data: profile});
                 }).catch(function (exc:any) {
+                    winstonLogger.error(exc);
                     res.json({success: false, data: null, error: exc});
                 });
         });
@@ -70,6 +74,7 @@ class ProfileRoute {
 
                 newProfile.save(function(err: any, profile: any) {
                     if (err) {
+                        winstonLogger.error(err);
                         return res.json({success: false, msg: "Error creating profile", error: err});
                     } else {
                         return res.json({success: true, msg: "Successful created new profile.", _id: profile._id});

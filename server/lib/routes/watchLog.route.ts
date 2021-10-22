@@ -1,6 +1,7 @@
 import { Router } from "express";
 import moment from "moment";
 import * as WatchLog from "../models/watchLog.model";
+import { winstonLogger } from "../config/winston.config";
 
 class WatchLogRoute {
 
@@ -14,6 +15,7 @@ class WatchLogRoute {
     public WatchLogModel:any;
     public DATE_FORMAT = 'DD-MM-YYYY HH:mm:ss';
     public USER_STREAM_LIMIT = 3;
+    public STREAM_LOG_INTERVAL = 10;
 
     public routes() {
         //get all watch logs.
@@ -27,6 +29,7 @@ class WatchLogRoute {
                 .then(function(watchLogs:any){
                     res.json({success: true, data: watchLogs});
                 }).catch(function (exc:any) {
+                    winstonLogger.error(exc);
                     res.json({success: false, data: null, error: exc});
                 });
 
@@ -43,6 +46,7 @@ class WatchLogRoute {
                 .then(function(watchLog:any){
                     res.json({success: true, data: watchLog});
                 }).catch(function (exc:any) {
+                    winstonLogger.error(exc);
                     res.json({success: false, data: null, error: exc});
                 });
 
@@ -52,22 +56,26 @@ class WatchLogRoute {
         // is this user (account) watching anything now (in the last 10 seconds) ?
         this.router.get("/latest/users/:id", (req:any, res:any) => {
             let self = this;
-            console.log(moment(), moment().subtract(10, 'seconds'));
 
             self.WatchLogModel
                 .find({ 
                     user:req.params.id,
                     timestamp: {
                         $lte: moment(),
-                        $gte: moment().subtract(10, 'seconds')
+                        $gte: moment().subtract(this.STREAM_LOG_INTERVAL, 'seconds')
                     }
                 })
                 .populate('video')
                 .populate('profile')
                 .then(function(watchLogs:[]){
-                    watchLogs?.length < self.USER_STREAM_LIMIT && res.json({success: true, message: "User can stream", data: watchLogs});
-                    watchLogs?.length >= self.USER_STREAM_LIMIT && res.json({success: false, message: "User already has 3 concurrent streams", data: watchLogs});
+                    watchLogs?.length < self.USER_STREAM_LIMIT && res.json({
+                        success: true, canStream: true, message: "User can stream", data: watchLogs
+                    });
+                    watchLogs?.length >= self.USER_STREAM_LIMIT && res.json({
+                        success: false, canStream: false, message: "User already has 3 concurrent streams", data: watchLogs
+                    });
                 }).catch(function (exc:any) {
+                    winstonLogger.error(exc);
                     res.json({success: false, data: null, error: exc});
                 });
 
@@ -84,6 +92,7 @@ class WatchLogRoute {
                 .then(function(watchLog:any){
                     res.json({success: true, data: watchLog});
                 }).catch(function (exc:any) {
+                    winstonLogger.error(exc);
                     res.json({success: false, data: null, error: exc});
                 });
         });
@@ -106,6 +115,7 @@ class WatchLogRoute {
                     .then(function(watchLog:any){
                         res.json({success: true, msg: "Successful created new watchLog.", data: watchLog});
                     }).catch(function (exc:any) {
+                        winstonLogger.error(exc);
                         res.json({success: false, data: null, error: exc});
                     });
             }
