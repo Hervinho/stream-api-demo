@@ -63,11 +63,6 @@ class ProfileRoute {
             if (!req.body.name || !req.body.user) {
                 res.json({success: false, msg: "Please pass name and user Id."});
             } else {
-                // let newProfile = new this.ProfileModel({
-                //     password: req.body.password,
-                //     email: req.body.email,
-	            //     fullname: req.body.fullname
-                // });
                 let newProfile = new this.ProfileModel({
                     ...req.body
                 });

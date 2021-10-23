@@ -6,8 +6,7 @@
   "scripts": {
     "build": "tsc",
     "server": "nodemon --exec ts-node ./server/lib/app.ts",
-    "start": "forever start ./server/dist/server.js",
-    "test": "mocha --recursive ./server/dist/tests/*.test.js"
+    "start": "forever start ./server/dist/server.js"
   },
   "author": "Hervinho",
   "license": "ISC",
